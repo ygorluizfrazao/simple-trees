@@ -5,7 +5,7 @@ class GeneralTree<DataType>(override val data: DataType) : Tree<DataType> {
         get() = _children.toList()
 
     override fun copy(): Tree<DataType> {
-        var newChildren  = emptyList<Tree<DataType>>()
+        var newChildren = emptyList<Tree<DataType>>()
         _children.forEach {
             newChildren = newChildren + it.copy()
         }
@@ -27,12 +27,52 @@ class GeneralTree<DataType>(override val data: DataType) : Tree<DataType> {
     override fun removeFirst(predicate: (Tree<DataType>) -> Boolean): Tree<DataType> {
         var newChildren = emptyList<Tree<DataType>>()
 
-        _children.forEach {
-            newChildren = newChildren + removeInBranch(it, predicate)
+        run exitForEach@{
+            _children.forEachIndexed { index, node ->
+                val (removalDone, remainingNodes) = removeFirstInBranch(node, predicate)
+                newChildren = newChildren + remainingNodes
+
+                if (removalDone) {
+                    if (index < _children.size - 1)
+                        newChildren = newChildren + _children.subList(index + 1, _children.size).toList()
+                    return@exitForEach
+                }
+            }
         }
+
         _children.clear()
         _children.addAll(newChildren)
         return this
+    }
+
+    private fun removeFirstInBranch(
+        branchHead: Tree<DataType>,
+        predicate: (Tree<DataType>) -> Boolean
+    ): Pair<Boolean, List<Tree<DataType>>> {
+        var newChildren = emptyList<Tree<DataType>>()
+        var removed = false
+
+        if (predicate(branchHead)) {
+            newChildren = branchHead.children.toList()
+            removed = true
+            return Pair(removed, newChildren)
+        }
+
+        branchHead.children.forEachIndexed { index, node ->
+            val (removalDone, returnedBranch) = removeFirstInBranch(node, predicate)
+            newChildren = newChildren + returnedBranch
+            if (removalDone) {
+                if (index < branchHead.children.size - 1)
+                    newChildren =
+                        newChildren + branchHead.children.toMutableList().subList(index + 1, _children.size).toList()
+                removed = true
+                val newNode = GeneralTree(branchHead.data)
+                newNode.addAll(newChildren)
+                return Pair(removed, listOf(newNode))
+            }
+        }
+
+        return Pair(removed, listOf(branchHead))
     }
 
     /**
@@ -125,6 +165,10 @@ class GeneralTree<DataType>(override val data: DataType) : Tree<DataType> {
         }
 
         return null
+    }
+
+    override fun toString(): String {
+        return this.asString()
     }
 
 }

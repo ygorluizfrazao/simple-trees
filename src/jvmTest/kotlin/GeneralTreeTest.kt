@@ -205,4 +205,58 @@ class GeneralTreeTest {
 
         assertThat(tree.asString()).isEqualTo(expectedTree.asString())
     }
+
+    @Test
+    fun `tree, try to remove first found leaf which corresponds to predicate condition, content remains the same minus the first found leaf`() {
+        val newNode1 = GeneralTree("1")
+        val newNode2 = GeneralTree("2")
+        val newnode22 = GeneralTree("2")
+        val newNode4 = GeneralTree("4")
+
+        val expectedNode1 = newNode1.copy()
+
+        newNode1.addAll(newNode2, newnode22)
+        tree.addAll(newNode1, newNode4)
+
+        val expectedTree = GeneralTree(tree.data)
+        expectedNode1.addAll(newnode22.copy())
+        expectedTree.addAll(expectedNode1, newNode4.copy())
+
+        println("Initial Tree:\n" + tree.asString())
+
+        tree.removeFirst { it.data == "2" }
+
+        println("End Tree:\n" + tree.asString())
+        println("Expected Tree:\n" + expectedTree.asString())
+
+        assertThat(tree.asString()).isEqualTo(expectedTree.asString())
+    }
+
+    @Test
+    fun `tree, try to remove first found branch head, children content is reassigned to the parent of the removed node`() {
+        val newNode1 = GeneralTree("1")
+        val newNode2 = GeneralTree("2")
+        val newNode3 = GeneralTree("3")
+        val newNode4 = GeneralTree("4")
+        val newNode5 = GeneralTree("5")
+        val newNode6 = GeneralTree("6")
+
+        newNode1.addAll(newNode2, newNode3)
+        newNode3.addAll(newNode5, newNode6)
+        tree.addAll(newNode1, newNode4)
+        val expectedTree = GeneralTree(tree.data)
+        expectedTree.addAll(newNode2.copy(), newNode3.copy(), newNode4.copy())
+
+
+        println("Initial Tree:\n" + tree.asString())
+
+        tree.removeFirst { it.data == newNode1.data || it.data == newNode3.data }
+
+        println("End Tree:\n" + tree.asString())
+        println("Expected Tree:\n" + expectedTree.asString())
+
+        assertThat(tree.asString()).isEqualTo(expectedTree.asString())
+
+        println(tree.removeFirst { it.data == newNode3.data }.asString())
+    }
 }

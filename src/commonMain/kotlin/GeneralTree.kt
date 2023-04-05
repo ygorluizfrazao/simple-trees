@@ -17,7 +17,7 @@ class GeneralTree<DataType>(override val data: DataType) : Tree<DataType> {
     }
 
     /**
-     * This method will not remove the own node, the search happens from its children downwards, left to right.
+     * This method will not remove the node itself, the search happens from its children downwards, left to right.
      * The default behavior when removing a node is to assign the remaining branch to the removed node parent.
      * The removing of nodes stops when the first node is removed, or no nodes are removed
      *
@@ -76,7 +76,7 @@ class GeneralTree<DataType>(override val data: DataType) : Tree<DataType> {
     }
 
     /**
-     * This method will not remove the own node, the search happens from its children downwards.
+     * This method will not remove the node itself, the search happens from its children downwards.
      * The default behavior when removing a node is to assign the remaining branch to the removed node parent.
      *
      * @param predicate lambda that evaluates if the node should be removed.

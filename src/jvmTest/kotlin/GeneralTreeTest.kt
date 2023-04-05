@@ -204,6 +204,5 @@ class GeneralTreeTest {
         println("Expected Tree:\n" + expectedTree.asString())
 
         assertThat(tree.asString()).isEqualTo(expectedTree.asString())
-        assertThat(false).isEqualTo(true)
     }
 }

@@ -12,11 +12,34 @@ class GeneralTree<DataType>(override val data: DataType) : Tree<DataType> {
         return GeneralTree(this.data).apply { addAll(newChildren) }
     }
 
+    override fun prune(predicate: (Tree<DataType>) -> Boolean): Tree<DataType> {
+        TODO("Not yet implemented")
+    }
+
+    /**
+     * This method will not remove the own node, the search happens from its children downwards, left to right.
+     * The default behavior when removing a node is to assign the remaining branch to the removed node parent.
+     * The removing of nodes stops when the first node is removed, or no nodes are removed
+     *
+     * @param predicate lambda that evaluates if the node should be removed.
+     * @return The same node with items removed from its branches.
+     */
+    override fun removeFirst(predicate: (Tree<DataType>) -> Boolean): Tree<DataType> {
+        var newChildren = emptyList<Tree<DataType>>()
+
+        _children.forEach {
+            newChildren = newChildren + removeInBranch(it, predicate)
+        }
+        _children.clear()
+        _children.addAll(newChildren)
+        return this
+    }
+
     /**
      * This method will not remove the own node, the search happens from its children downwards.
      * The default behavior when removing a node is to assign the remaining branch to the removed node parent.
      *
-     * @param predicate lambda that evaluates if the item should be removed.
+     * @param predicate lambda that evaluates if the node should be removed.
      * @return The same node with items removed from its branches.
      */
     override fun remove(predicate: (Tree<DataType>) -> Boolean): Tree<DataType> {
@@ -70,14 +93,6 @@ class GeneralTree<DataType>(override val data: DataType) : Tree<DataType> {
     override fun addChild(node: Tree<DataType>): Tree<DataType> {
         _children.add(node)
         return this
-    }
-
-    override fun removeFirst(node: Tree<DataType>): Tree<DataType> {
-        TODO("Not yet implemented")
-    }
-
-    override fun removeAll(predicate: (Tree<DataType>) -> Boolean): Tree<DataType> {
-        TODO("Not yet implemented")
     }
 
     override fun search(predicate: (Tree<DataType>) -> Boolean): List<Tree<DataType>> {

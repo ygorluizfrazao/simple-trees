@@ -8,8 +8,8 @@ interface Tree<DataType> {
     fun addAll(nodes: Collection<Tree<DataType>>): Tree<DataType>
     fun addAll(vararg nodes: Tree<DataType>): Tree<DataType>
     fun remove(predicate: (Tree<DataType>) -> Boolean): Tree<DataType>
-    fun removeFirst(node: Tree<DataType>): Tree<DataType>
-    fun removeAll(predicate: (Tree<DataType>) -> Boolean): Tree<DataType>
+    fun removeFirst(predicate: (Tree<DataType>) -> Boolean): Tree<DataType>
+    fun prune(predicate: (Tree<DataType>) -> Boolean): Tree<DataType>
     fun search(predicate: (Tree<DataType>) -> Boolean): List<Tree<DataType>>
     fun first(predicate: (Tree<DataType>) -> Boolean): Tree<DataType>?
     fun depth(): Int

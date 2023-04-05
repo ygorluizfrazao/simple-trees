@@ -4,7 +4,10 @@ interface Tree<DataType> {
     val children: Collection<Tree<DataType>>
 
     fun addChild(node: Tree<DataType>): Tree<DataType>
+    fun copy(): Tree<DataType>
     fun addAll(nodes: Collection<Tree<DataType>>): Tree<DataType>
+    fun addAll(vararg nodes: Tree<DataType>): Tree<DataType>
+    fun remove(predicate: (Tree<DataType>) -> Boolean): Tree<DataType>
     fun removeFirst(node: Tree<DataType>): Tree<DataType>
     fun removeAll(predicate: (Tree<DataType>) -> Boolean): Tree<DataType>
     fun search(predicate: (Tree<DataType>) -> Boolean): List<Tree<DataType>>
@@ -15,11 +18,11 @@ interface Tree<DataType> {
 
 }
 
-fun <D> Tree<D>.buildTreeString(level: Int = 0): String {
+fun <D> Tree<D>.asString(level: Int = 0): String {
     val asString = StringBuilder("\t".repeat(level) + if (level > 0) "->" else "")
     asString.append(this.data.toString() + "\n")
     children.forEach {
-        asString.append(it.buildTreeString(level + 1))
+        asString.append(it.asString(level + 1))
     }
     return asString.toString()
 }

@@ -259,4 +259,24 @@ class GeneralTreeTest {
 
         println(tree.removeFirst { it.data == newNode3.data }.asString())
     }
+
+    @Test
+    fun `tree, 3-depth tree, depth() should return 3`() {
+        val newNode1 = GeneralTree("1")
+        val newNode2 = GeneralTree("2")
+        val newNode3 = GeneralTree("3")
+        val newNode4 = GeneralTree("4")
+        val newNode5 = GeneralTree("5")
+        val newNode6 = GeneralTree("6")
+
+        newNode1.addAll(newNode2, newNode3)
+        newNode3.addAll(newNode5, newNode6)
+        tree.addAll(newNode1, newNode4)
+
+        println("Initial Tree:\n" + tree.asString())
+        assertThat(tree.depth()).isEqualTo(3)
+        tree.removeFirst { true }
+        println("Tree:\n"+tree.asString())
+        assertThat(tree.depth()).isEqualTo(2)
+    }
 }

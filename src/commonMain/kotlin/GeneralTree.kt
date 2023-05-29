@@ -118,7 +118,18 @@ class GeneralTree<DataType>(override val data: DataType) : Tree<DataType> {
     }
 
     override fun depth(): Int {
-        TODO("Not yet implemented")
+        return recursiveDepth(this)
+    }
+
+    private fun recursiveDepth(branchHead: Tree<DataType>,level: Int = 0): Int {
+        var maxLevel = level
+        if (branchHead.children.isEmpty())
+            return level
+
+        branchHead.children.forEach {
+            maxLevel = maxOf(maxLevel, recursiveDepth(it,level + 1))
+        }
+        return maxLevel
     }
 
     override fun size(): Int {

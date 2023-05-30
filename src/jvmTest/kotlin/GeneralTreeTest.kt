@@ -279,4 +279,33 @@ class GeneralTreeTest {
         println("Tree:\n"+tree.asString())
         assertThat(tree.depth()).isEqualTo(2)
     }
+
+    @Test
+    fun `tree, 0-depth tree, depth() should return0`() {
+        println("Initial Tree:\n" + tree.asString())
+        assertThat(tree.depth()).isEqualTo(0)
+    }
+
+    @Test
+    fun `tree, 7 nodes size() should return 7`() {
+        val newNode1 = GeneralTree("1")
+        val newNode2 = GeneralTree("2")
+        val newNode3 = GeneralTree("3")
+        val newNode4 = GeneralTree("4")
+        val newNode5 = GeneralTree("5")
+        val newNode6 = GeneralTree("6")
+
+        newNode1.addAll(newNode2, newNode3)
+        newNode3.addAll(newNode5, newNode6)
+        tree.addAll(newNode1, newNode4)
+
+        println("Initial Tree:\n" + tree.asString())
+        assertThat(tree.size()).isEqualTo(7)
+    }
+
+    @Test
+    fun `tree, root tree should return 1`() {
+        println("Initial Tree:\n" + tree.asString())
+        assertThat(tree.size()).isEqualTo(1)
+    }
 }

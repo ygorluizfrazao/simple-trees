@@ -133,7 +133,17 @@ class GeneralTree<DataType>(override val data: DataType) : Tree<DataType> {
     }
 
     override fun size(): Int {
-        TODO("Not yet implemented")
+        return recursiveSize(this)
+    }
+
+    private fun recursiveSize(branchHead: Tree<DataType>): Int{
+        var size = 1
+        if (branchHead.children.isEmpty())
+            return 1
+        branchHead.children.forEach {
+            size+=recursiveSize(it)
+        }
+        return size
     }
 
     override fun addAll(nodes: Collection<Tree<DataType>>): Tree<DataType> {

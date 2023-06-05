@@ -12,8 +12,30 @@ class GeneralTree<DataType>(override val data: DataType) : Tree<DataType> {
         return GeneralTree(this.data).apply { addAll(newChildren) }
     }
 
-    override fun prune(predicate: (Tree<DataType>) -> Boolean): Tree<DataType> {
-        TODO("Not yet implemented")
+    override fun prune(predicate: (Tree<DataType>) -> Boolean, inclusive: Boolean): List<Tree<DataType>> {
+        return this.recursivePrune(predicate,inclusive,null)
+    }
+
+    private fun Tree<DataType>.recursivePrune(
+        predicate: (Tree<DataType>) -> Boolean,
+        inclusive: Boolean,
+        parent: Tree<DataType>?
+    ): List<Tree<DataType>> {
+        var response = listOf<Tree<DataType>>()
+
+        if (predicate(this)) {
+            response = response + this
+            _children.clear()
+            if (inclusive) parent?.removeFirst {
+                it == this
+            }
+            return response
+        }
+
+        _children.forEach {
+            response = response + it.recursivePrune(predicate, inclusive, this)
+        }
+        return response
     }
 
     /**
@@ -121,13 +143,13 @@ class GeneralTree<DataType>(override val data: DataType) : Tree<DataType> {
         return recursiveDepth(this)
     }
 
-    private fun recursiveDepth(branchHead: Tree<DataType>,level: Int = 0): Int {
+    private fun recursiveDepth(branchHead: Tree<DataType>, level: Int = 0): Int {
         var maxLevel = level
         if (branchHead.children.isEmpty())
             return level
 
         branchHead.children.forEach {
-            maxLevel = maxOf(maxLevel, recursiveDepth(it,level + 1))
+            maxLevel = maxOf(maxLevel, recursiveDepth(it, level + 1))
         }
         return maxLevel
     }
@@ -136,12 +158,12 @@ class GeneralTree<DataType>(override val data: DataType) : Tree<DataType> {
         return recursiveSize(this)
     }
 
-    private fun recursiveSize(branchHead: Tree<DataType>): Int{
+    private fun recursiveSize(branchHead: Tree<DataType>): Int {
         var size = 1
         if (branchHead.children.isEmpty())
             return 1
         branchHead.children.forEach {
-            size+=recursiveSize(it)
+            size += recursiveSize(it)
         }
         return size
     }

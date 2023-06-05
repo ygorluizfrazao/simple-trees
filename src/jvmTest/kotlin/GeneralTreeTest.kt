@@ -310,7 +310,7 @@ class GeneralTreeTest {
     }
 
     @Test
-    fun `tree, prune branch inclusive`() {
+    fun `tree, prune root leave only root in tree`() {
         val newNode1 = GeneralTree("1")
         val newNode2 = GeneralTree("2")
         val newNode3 = GeneralTree("3")
@@ -322,13 +322,11 @@ class GeneralTreeTest {
         newNode3.addAll(newNode5, newNode6)
         tree.addAll(newNode1, newNode4)
         val expectedTree = GeneralTree(tree.data)
-        expectedTree.addAll(newNode4.copy())
-
 
         println("Initial Tree:\n" + tree.asString())
 
-        tree.prune(inclusive = false){
-            it.data == "1"
+        tree.prune {
+            it.data == "Root"
         }
 
         println("End Tree:\n" + tree.asString())
@@ -338,4 +336,36 @@ class GeneralTreeTest {
 
         println(tree.removeFirst { it.data == newNode3.data }.asString())
     }
+
+    @Test
+    fun `tree, prune intermediate branch, remove all branch including its head`() {
+        val newNode1 = GeneralTree("1")
+        val newNode2 = GeneralTree("2")
+        val newNode3 = GeneralTree("3")
+        val newNode4 = GeneralTree("4")
+        val newNode5 = GeneralTree("5")
+        val newNode6 = GeneralTree("6")
+
+        val expectedTree = GeneralTree(tree.data)
+        newNode1.addAll(newNode2)
+        expectedTree.addAll(newNode1.copy())
+        newNode1.addAll(newNode3)
+        newNode3.addAll(newNode5, newNode6)
+        tree.addAll(newNode1, newNode4)
+        expectedTree.addAll(newNode4)
+
+        println("Initial Tree:\n" + tree.asString())
+
+        tree.prune {
+            it.data == "3"
+        }
+
+        println("End Tree:\n" + tree.asString())
+        println("Expected Tree:\n" + expectedTree.asString())
+
+        assertThat(tree.asString()).isEqualTo(expectedTree.asString())
+
+        println(tree.removeFirst { it.data == newNode3.data }.asString())
+    }
+
 }

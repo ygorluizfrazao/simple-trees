@@ -13,29 +13,28 @@ class GeneralTree<DataType>(override val data: DataType) : Tree<DataType> {
     }
 
     override fun prune(predicate: (Tree<DataType>) -> Boolean) {
-        val newBranch =  this.recursivePrune(predicate)
+        val newChildren =  this.recursivePrune(predicate)
         _children.clear()
-        _children.addAll(newBranch)
+        _children.addAll(newChildren)
     }
 
     private fun Tree<DataType>.recursivePrune(
         predicate: (Tree<DataType>) -> Boolean
     ): List<Tree<DataType>> {
 
-        val newNode = GeneralTree(this.data)
-
         if (predicate(this)) {
-            return listOf(newNode)
+            return listOf()
         }
+
+        if(children.isEmpty())
+            return listOf(this)
 
         val newBranch = mutableListOf<Tree<DataType>>()
         this.children.forEach {
             newBranch += it.recursivePrune(predicate)
         }
 
-        newNode.addAll(newBranch)
-
-        return listOf(newNode)
+        return newBranch
     }
 
     /**

@@ -1,4 +1,4 @@
-class GeneralTree<DataType>(override val data: DataType) : Tree<DataType> {
+open class GeneralTree<DataType>(override val data: DataType) : Tree<DataType> {
 
     private val _children = mutableListOf<Tree<DataType>>()
     override val children: Collection<Tree<DataType>>
